@@ -1,0 +1,59 @@
+#roomContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    width: 300px;
+    align-items: center;
+}
+
+#roomLabel {
+    color: var(--color-light); 
+    font-size: 28px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#roomInput {
+    background: var(--color-light);
+    border: none;
+    border-radius: 0;
+    font-size: 28px;
+    width: 150px;
+    color: var(--color-dark);
+    padding: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#roomId {
+    display: flex; 
+    border: none;
+    border-radius: 0;
+    font-size: 28px;
+    color: var(--color-light);
+    padding: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#roomButton {
+    border-radius: 0;
+    border: none;
+    /*border: solid var(--color-light) 1px;*/
+    background: var(--color-dark);
+    color: var(--color-light);
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+    #roomContainer {
+        width: 150px;
+    } 
+}

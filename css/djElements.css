@@ -1,0 +1,72 @@
+/*----------------------------------------------------------------------------*/
+/* DJ-HOST */
+/*----------------------------------------------------------------------------*/
+
+dj-host {
+    background-color: var(--color-dark) !important;
+}
+
+.dj-host-button {
+    background: var(--color-dark) !important;
+    color: var(--color-light) !important;
+    border: solid var(--color-light) 1px !important;
+}
+
+.dj-host-button.active {
+    background: var(--color-light) !important;
+    color: var(--color-dark) !important;
+}
+
+.option-switcher-button {
+    background: var(--color-light) !important;
+    border: solid var(--color-light) 1px !important;
+}
+
+.dj-host-input, .option-switcher-name {
+    background: var(--color-dark) !important;
+    color: var(--color-light) !important;
+    border: solid var(--color-light) 1px !important;
+}
+
+.dj-host-start-stop-button.start {
+    background: var(--color-green) !important;
+    border: solid var(--color-green) 1px !important;
+    color: var(--color-dark) !important;
+}
+
+.dj-host-start-stop-button.start::before {
+    background: var(--color-green) !important;
+    border: solid var(--color-green) 1px !important;
+}
+
+.dj-host-start-stop-button.stop {
+    background: var(--color-red) !important;
+    border: solid var(--color-red) 1px !important;
+    color: var(--color-dark) !important;
+}
+
+.dj-host-start-stop-button.stop::before {
+    background: var(--color-red) !important;
+    border: solid var(--color-red) 1px !important;
+}
+
+/*----------------------------------------------------------------------------*/
+/* DJ-CLIENT */
+/*----------------------------------------------------------------------------*/
+
+dj-client {
+    background: var(--color-dark) !important;
+    border: none !important;
+}
+
+.dj-client-button {
+    background-color: var(--color-dark) !important;
+    border: none !important;
+    color: var(--color-light) !important;
+}
+
+.dj-client-name {
+    background: var(--color-dark) !important;
+    border: none !important;
+    color: var(--color-light) !important;
+}

@@ -1,0 +1,21 @@
+.theme-onedark {
+    --color-dark:   #282C34;
+    --color-light:  #ABB2BF;
+    --color-red:    #E06C75;
+    --color-green:  #98C379;
+    --color-yellow: #E5C07B;
+    --color-blue:   #61AFEF;
+    --color-pink:   #C678DD;
+    --color-aqua:   #56B6C2;
+}
+
+.theme-gruvbox {
+    --color-dark:       #282828;
+    --color-light:      #ebdbb2;
+    --color-red:        #fb4934;
+    --color-green:      #b8bb26;
+    --color-yellow:     #fabd2f;
+    --color-blue:       #83a598;
+    --color-pink:       #d3869b;
+    --color-aqua:       #8ec07c;
+}

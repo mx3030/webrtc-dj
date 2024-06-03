@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>WebRTC-DJ</title>
+        
+        <!--CSS FILES-->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <link rel="stylesheet" href="css/colors.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="css/room.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="css/app.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="css/buttons.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="css/djElements.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    </head>
+    <body class="theme-onedark">
+        <div id="mainContainer">
+            <div id="roomContainer">
+                <span id="roomLabel">Room</span>
+                <input id="roomInput" type="text" value="" name="" id=""/>
+                <span id="roomId" class="hide"></span>
+                <button id="roomButton">
+                    <span class="material-symbols-outlined">arrow_forward_ios</span>
+                </button>
+            </div> 
+            <div id="appContainer" class="hide"> 
+                <div id="hostContainer"></div>
+                <div id="clientContainer"></div> 
+            </div>
+        </div>
+        
+        <!--JS FILES-->
+        <script charset="utf-8" type="module" src="js/main.js"></script>
+        <script charset="utf-8" src="custom_elements/cycleButton/cycleButton.js"></script>
+        <script charset="utf-8" src="custom_elements/optionSwitcher/optionSwitcher.js"></script>
+        <script charset="utf-8" src="custom_elements/djElements/djHost.js"></script>
+        <script charset="utf-8" src="custom_elements/djElements/djClient.js"></script>
+    </body>
+</html>

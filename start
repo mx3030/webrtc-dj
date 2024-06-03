@@ -1,0 +1,20 @@
+#! /bin/bash
+
+TARGET_DIR=$PWD
+echo $TARGET_DIR
+
+# use python https server
+PY_LIB_PATH="$HOME/code/lib_py" 
+SERVER_FOLDER="$PY_LIB_PATH/https_server/"  
+
+cd $SERVER_FOLDER
+python3 server.py --port=7654 --target-dir=$TARGET_DIR
+cd -
+
+# use js https server
+#JS_LIB_PATH="$HOME/code/lib_js" 
+#SERVER_FOLDER="$JS_LIB_PATH/https_server/"  
+
+#cd $SERVER_FOLDER
+#node server.js --port=7623 --target-dir=$TARGET_DIR
+#cd -

@@ -1,0 +1,35 @@
+#appContainer {
+    width: 300px;
+    height: 60vh;
+    border: solid var(--color-light) 1px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+#appContainer::-webkit-scrollbar {
+    display: none;
+}
+
+#appContainer {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#hostContainer {
+    display: flex;
+    padding: 10px;
+    border-bottom: solid var(--color-light) 1px;
+}
+
+#clientContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+/*@media only screen and (max-width: 600px) {*/
+    
+/*}*/
