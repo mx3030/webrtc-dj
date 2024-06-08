@@ -18,32 +18,31 @@ export class App {
 
     setupEventListeners(){
         window.addEventListener('beforeunload', ()=>{
-            this.close();
+            this.firebaseExit();
         })
     }
     
     async handleDjChange(data){
         if(!data){
-            // no dj was ever active in this room, so there is no entry
+            // since room creation, no dj active
             this.djHandler = new DjHostHandler(this.roomId, this.userId, this.firebaseHandler);
         } else {
             if(data!=this.userId){
-                // user is not the dj himself
-                const djPath = '/rooms/' + this.roomId + '/users/' + data
-                const djName = await this.firebaseHandler.read(djPath);
-                if(djName){
-                    // dj is also in user list
-                    this.djHandler = new DjClientHandler(djName, this.roomId, this.firebaseHandler);
+                // partner is maybe the dj
+                const partnerPath = '/rooms/' + this.roomId + '/users/' + data
+                const partnerName = await this.firebaseHandler.read(partnerPath);
+                if(partnerName){
+                    // partner is still in the room
+                    this.djHandler = new DjClientHandler(partnerName, this.roomId, this.firebaseHandler);
                 } else {
-                    // previous dj is not in the user list anymore
+                    // partner is not in the room
                     this.djHandler = new DjHostHandler(this.roomId, this.userId, this.firebaseHandler);
                 }
             }
         }
     }
 
-    close(){
-        // handle firebase when closing app as room user
+    firebaseExit(){
         const userPath = '/rooms/' + this.roomId + '/users/' + this.userId
         this.firebaseHandler.remove(userPath);
     }

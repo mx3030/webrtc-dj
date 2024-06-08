@@ -5,15 +5,7 @@ export class WebRTCHandler {
         this._connectionCallback = null;
         this._trackCallback = null;
     }
-        
-    addStream(stream) {
-        if (this.pc) {
-            stream.getTracks().forEach(track => this.pc.addTrack(track, stream));
-        } else {
-            console.error("PeerConnection is not initialized.");
-        }
-    }
-
+            
     createPeerConnection() {
         const configuration = { sdpSemantics: 'unified-plan' };
         this.pc = new RTCPeerConnection(configuration);
@@ -22,17 +14,7 @@ export class WebRTCHandler {
         this.pc.onconnectionstatechange = event => this.handleConnectionStateChangeEvent(event);
         this.pc.ontrack = event => this.handleTrackEvent(event);
     }
-
-    waitToCompleteIceGathering() {
-        return new Promise((resolve) => {
-            this.pc.onicegatheringstatechange = (event) => {
-                if (event.target.iceGatheringState === "complete") {
-                    resolve();
-                }
-            };
-        });
-    }
-    
+   
     handleICECandidate(event) {
         if (event.candidate) {
             this.iceCandidates.push(event.candidate);
@@ -51,7 +33,17 @@ export class WebRTCHandler {
             }
         }
     }
- 
+
+    waitToCompleteIceGathering() {
+        return new Promise((resolve) => {
+            this.pc.onicegatheringstatechange = (event) => {
+                if (event.target.iceGatheringState === "complete") {
+                    resolve();
+                }
+            };
+        });
+    }
+
     async createOffer() {
         try {
             const offer = await this.pc.createOffer();
@@ -136,6 +128,14 @@ export class WebRTCHandler {
     /*------------------------------------------------------------------------*/
     /* SETTER */
     /*------------------------------------------------------------------------*/
+    
+    set stream(stream) {
+        if (this.pc) {
+            stream.getTracks().forEach(track => this.pc.addTrack(track, stream));
+        } else {
+            console.error("PeerConnection is not initialized.");
+        }
+    }
 
     set connectionCallback(func){
         this._connectionCallback = func;

@@ -5,11 +5,11 @@ export class DjHostHandler {
     constructor(roomId, userId, firebaseHandler){
         this.roomId = roomId;
         this.userId = userId;
-        this.firebaseHandler = firebaseHandler; 
         this.mediaHandler = new MediaHandler();
         this.webrtcHandler = new WebRTCHandler();
-        this.createCustomElement();
+        this.firebaseHandler = firebaseHandler; 
         this.setupFirebaseWatchers();
+        this.initDjHost();
     }
 
     setupFirebaseWatchers(){
@@ -17,27 +17,25 @@ export class DjHostHandler {
         this.firebaseHandler.watch(answerPath, (data) => this.webrtcHandler.handleAnswer(data));
     }
 
-    async createCustomElement(){
+    async initDjHost(){
         await this.mediaHandler.findMics();
-        this.el = document.createElement('dj-host');
-        this.playerContainer = document.getElementById('playerContainer');
-        this.playerContainer.innerHTML = '';
-        this.playerContainer.appendChild(this.el);
-        this.el.audioDevices = this.mediaHandler.getDeviceList();
-        this.el.startCallback = (name, deviceIndex) => this.start(name, deviceIndex);
-        this.el.stopCallback = (name, deviceIndex) => this.stop(name, deviceIndex);
+        this.djHost = document.createElement('dj-host');
+        this.djContainer = document.getElementById('djContainer');
+        this.djContainer.innerHTML = '';
+        this.djContainer.appendChild(this.djHost);
+        this.djHost.audioDevices = this.mediaHandler.getDeviceList();
+        this.djHost.startCallback = (name, deviceIndex) => this.start(name, deviceIndex);
+        this.djHost.stopCallback = (name, deviceIndex) => this.stop(name, deviceIndex);
     }   
     
     async start(name, deviceIndex){
         // handle webrtc
         this.webrtcHandler.createPeerConnection();
-        const deviceLabel = this.el.deviceLabel;
+        const deviceLabel = this.djHost.deviceLabel;
         if (deviceLabel=='system audio'){
-            let stream = await this.mediaHandler.getSystemAudio();
-            this.webrtcHandler.addStream(stream); 
+            this.webrtcHandler.stream = await this.mediaHandler.getSystemAudio(); 
         } else {
-            let stream = await this.mediaHandler.getMicAudio(deviceLabel)
-            this.webrtcHandler.addStream(stream);
+            this.webrtcHandler.stream = await this.mediaHandler.getMicAudio(deviceLabel);
         }
         const offer = await this.webrtcHandler.createOffer();
         const offerPath = '/rooms/' + this.roomId + '/offer/'
@@ -46,7 +44,7 @@ export class DjHostHandler {
         const djPath = '/rooms/' + this.roomId + '/dj';
         this.firebaseHandler.write(djPath, this.userId);
         const userPath = 'rooms/' + this.roomId + '/users/' + this.userId
-        this.firebaseHandler.write(userPath, this.el.name);
+        this.firebaseHandler.write(userPath, this.djHost.name);
     }
 
     stop(name, deviceIndex){

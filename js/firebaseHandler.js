@@ -4,6 +4,7 @@ import { getDatabase, ref, set, push, child, get, onValue, off, remove } from "h
 /**
 * Class to handle Firebase real-time database interactions.
 */
+
 export class FirebaseHandler {
     /**
     * Initializes a new instance of the FirebaseHandler class.
