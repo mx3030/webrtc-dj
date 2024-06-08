@@ -117,6 +117,10 @@ class OptionSwitcher extends HTMLElement {
         return this._options[this._index];
     }
 
+    get index(){
+        return this._index;
+    }
+
     /*------------------------------------------------------------------------*/
     /* SETTER */
     /*------------------------------------------------------------------------*/

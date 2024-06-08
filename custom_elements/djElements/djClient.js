@@ -41,7 +41,7 @@ djClientTemplate.innerHTML = `
             justify-content: flex-start;
             align-items: center;
         }
-
+ 
         .dj-client-button {
             height: 40px;
             width: 40px;
@@ -64,15 +64,11 @@ djClientTemplate.innerHTML = `
     </style>
 
     <div class="dj-client-inner-container"> 
-        <div class="dj-client-name">client</div>  
+        <div class="dj-client-name"></div>  
         <cycle-button class="dj-client-connect" states='[
             {"name": "off", "googleIcon": "link", "classes": ["dj-client-button"]},
-            {"name": "on", "googleIcon": "link_off", "classes": ["dj-client-button"]}
-        ]'></cycle-button> 
-        <cycle-button class="dj-client-sound" states='[ 
-            {"name": "off", "googleIcon": "volume_up", "classes": ["dj-client-button"]},
-            {"name": "on", "googleIcon": "volume_off", "classes": ["dj-client-button"]}
-        ]'></cycle-button> 
+            {"name": "on", "googleIcon": "link", "classes": ["dj-client-button", "active"]}
+        ]'></cycle-button>  
     </div>
      
 `;
@@ -80,14 +76,33 @@ djClientTemplate.innerHTML = `
 class DjClient extends HTMLElement {
     constructor(){
         super();
+        this._name = null;
     }
 
     connectedCallback(){
         const temp = document.importNode(djClientTemplate.content, true);
         this.appendChild(temp);
         this.$name = this.querySelector('.dj-client-name');
-        this._name = this.$name.innerHTML;
-        
+        this.$connectButton = this.querySelector('.dj-client-connect');
+        this._startCallback = null; 
+        this._stopCallback = null;
+        this.$connectButton.clickCallback = (state) => this.handleConnectButton(state);
+        this.render();
+    }
+    
+    handleConnectButton(state){
+        if(!this._startCallback || !this._stopCallback){
+            return;
+        }
+        if(state==0){
+            this._stopCallback();
+        } else if (state==1){
+            this._startCallback();
+        }
+    }
+
+    render(){
+        this.$name.innerHTML = this._name;
     }
   
     kill(){
@@ -101,6 +116,26 @@ class DjClient extends HTMLElement {
     set name(name){
         this._name = name;
     } 
+
+    set success(value){
+        if(value){
+            this.$connectButton.addClass('green');
+            this.$connectButton.removeClass('red');
+            this.$connectButton.removeClass('active');
+        } else {
+            this.$connectButton.addClass('red');
+            this.$connectButton.removeClass('green');
+            this.$connectButton.removeClass('active');
+        }
+    }
+
+    set startCallback(func){
+        this._startCallback = func;
+    }
+
+    set stopCallback(func){
+        this._stopCallback = func;
+    }
 
 }
 

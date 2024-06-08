@@ -28,6 +28,10 @@ dj-host {
     border: solid var(--color-light) 1px !important;
 }
 
+.dj-host-input.invalid {
+    border: solid var(--color-red) 1px !important;
+}
+
 .dj-host-start-stop-button.start {
     background: var(--color-green) !important;
     border: solid var(--color-green) 1px !important;
@@ -61,12 +65,29 @@ dj-client {
 
 .dj-client-button {
     background-color: var(--color-dark) !important;
-    border: none !important;
+    border: solid var(--color-light) 1px !important;
     color: var(--color-light) !important;
+}
+
+.dj-client-button.active {
+    background-color: var(--color-light) !important;
+    color: var(--color-dark) !important;
+}
+
+.dj-client-button.green {
+    background-color: var(--color-green) !important;
+    color: var(--color-dark) !important;
+    border: solid var(--color-green) 1px !important;
+}
+
+.dj-client-button.red {
+    background-color: var(--color-red) !important;
+    color: var(--color-dark) !important;
+    border: solid var(--color-red) 1px !important;
 }
 
 .dj-client-name {
     background: var(--color-dark) !important;
-    border: none !important;
+    border: solid var(--color-light) 1px !important;
     color: var(--color-light) !important;
 }

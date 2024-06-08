@@ -36,6 +36,14 @@ class CycleButton extends HTMLElement {
         }
     } 
 
+    addClass(string){
+        this.$button.classList.add(string);
+    }
+
+    removeClass(string){
+        this.$button.classList.remove(string);
+    }
+
     render() {
         if (this._states.length > 0) {
             const currentState = this._states[this._state];

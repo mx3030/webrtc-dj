@@ -37,6 +37,10 @@ djHostTemplate.innerHTML = `
             font-size: 24px;
         }
 
+        .dj-host-input.invalid {
+            border: solid red 1px;
+        }
+
         .dj-host-button {
             height: 40px;
             width: 40px;
@@ -64,10 +68,10 @@ djHostTemplate.innerHTML = `
 
     <div class="dj-host-inner-container">
         <cycle-button class="dj-host-select" states='[ 
-            {"name": "off", "googleIcon": "speaker", "classes": ["dj-host-button"]},
-            {"name": "on", "googleIcon": "speaker", "classes": ["dj-host-button", "active"]}
+            {"name": "off", "googleIcon": "music_cast", "classes": ["dj-host-button"]},
+            {"name": "on", "googleIcon": "music_cast", "classes": ["dj-host-button", "active"]}
         ]'></cycle-button>
-        <input class="dj-host-input" type="text" value="host" name="" id=""/>  
+        <input class="dj-host-input" type="text" value="" name="" id=""/>  
         <cycle-button class="dj-host-connect" states='[
             {"name": "off", "googleIcon": "play_arrow", "classes":["dj-host-button", "dj-host-start-stop-button", "start"]},
             {"name": "on", "googleIcon": "stop", "classes": ["dj-host-button", "dj-host-start-stop-button", "stop"]}
@@ -91,7 +95,8 @@ class DjHost extends HTMLElement {
         this.$selectButton = this.querySelector('.dj-host-select');
         this.$selectButton.clickCallback = () => this.toggleOptionSwitcher();
         // handle connect button press
-        this._connectCallback = null; // callback method from djHostHandler class, which implements webrtc
+        this._startCallback = null; // callback method from djHostHandler class, which implements webrtc
+        this._stopCallback = null; 
         this.$connectButton = this.querySelector('.dj-host-connect');
         this.$connectButton.clickCallback = (state) => this.handleConnectButton(state);
         // handle delete button press
@@ -107,21 +112,42 @@ class DjHost extends HTMLElement {
     }
 
     handleConnectButton(state){
+        // check if input is present
+        if(!this.$input.value){
+            this.$connectButton.state = 0;
+            this.$input.classList.add('invalid');
+            return;
+        } else {
+            this.$input.classList.remove('invalid');
+        }
         // pass cycle button press up to djHostHandler class
-        if(!this._connectCallback){
+        if(!this._startCallback || !this._stopCallback){
             return;
         }
+        const name = this.$input.value;
+        const deviceIndex = this.$optionSwitcher.index;
         if(state==0){
-            this._connectCallback(false);
+            this._stopCallback(name, deviceIndex);
         } else if (state==1){
-            this._connectCallback(true);
+            this._startCallback(name, deviceIndex);
         }
     }
 
     kill(){
         this.remove();
     }
+    /*------------------------------------------------------------------------*/
+    /* GETTER */
+    /*------------------------------------------------------------------------*/
     
+    get name() {
+        return this.$input.value;
+    }
+
+    get deviceLabel() {
+        return this.$optionSwitcher.option;
+    }
+
     /*------------------------------------------------------------------------*/
     /* SETTER */
     /*------------------------------------------------------------------------*/
@@ -130,8 +156,12 @@ class DjHost extends HTMLElement {
         this.$optionSwitcher.options = array;
     }
     
-    set connectCallback(func){
-        this._connectCallback = func;
+    set startCallback(func){
+        this._startCallback = func;
+    }
+
+    set stopCallback(func){
+        this._stopCallback = func;
     }
 
 }

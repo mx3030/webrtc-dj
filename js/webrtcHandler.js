@@ -1,76 +1,147 @@
 export class WebRTCHandler {
-    
     constructor() {
-        this.createPeerConnection();
+        this.pc = null;
+        this.iceCandidates = [];
+        this._connectionCallback = null;
+        this._trackCallback = null;
+    }
+        
+    addStream(stream) {
+        if (this.pc) {
+            stream.getTracks().forEach(track => this.pc.addTrack(track, stream));
+        } else {
+            console.error("PeerConnection is not initialized.");
+        }
     }
 
-    createPeerConnection(stream) {
+    createPeerConnection() {
         const configuration = { sdpSemantics: 'unified-plan' };
         this.pc = new RTCPeerConnection(configuration);
         // setup peer connection listeners
+        this.pc.onicecandidate = event => this.handleICECandidate(event);
         this.pc.onconnectionstatechange = event => this.handleConnectionStateChangeEvent(event);
+        this.pc.ontrack = event => this.handleTrackEvent(event);
     }
 
-    addStream(stream) {
-        stream.getTracks().forEach(track => this.pc.addTrack(track, stream));
+    waitToCompleteIceGathering() {
+        return new Promise((resolve) => {
+            this.pc.onicegatheringstatechange = (event) => {
+                if (event.target.iceGatheringState === "complete") {
+                    resolve();
+                }
+            };
+        });
     }
-
-    handleConnectionStateChangeEvent(event){
-        console.log(this.pc.connectionState)
-        if(this.pc.connectionState=='connected'){
-            console.log("peers connected")
+    
+    handleICECandidate(event) {
+        if (event.candidate) {
+            this.iceCandidates.push(event.candidate);
         }
-    } 
-
+    }
+  
+    handleConnectionStateChangeEvent(event) {
+        if (this.pc.connectionState === 'connected') {
+            console.log("Peers connected");
+            if (this._connectionCallback) {
+                this._connectionCallback(true);
+            }
+        } else {
+            if (this._connectionCallback) {
+                this._connectionCallback(false);
+            }
+        }
+    }
+ 
     async createOffer() {
         try {
             const offer = await this.pc.createOffer();
-            await this.pc.setLocalDescription(offer); 
-            let data = {
-                "sdp" : offer.sdp,
-                "type" : offer.type
+            await this.pc.setLocalDescription(offer);
+            await this.waitToCompleteIceGathering();
+            const message = {
+                sdp: offer.sdp,
+                type: offer.type,
+                ice: this.iceCandidates
             };
-            let message = {
-                "topic" : 'offer',
-                "data" : data
-            };
-            return message
+            return JSON.stringify(message);
         } catch (error) {
-            console.log(error);
+            console.error("Error creating offer:", error);
+            throw error;
         }
     }
 
     async createAnswer() {
         try {
-            const answer = await pc.createAnswer();
-            await pc.setLocalDescription(answer);
-            let data = {
-                "sdp" : answer.sdp,
-                "type" : answer.type
+            const answer = await this.pc.createAnswer();
+            await this.pc.setLocalDescription(answer);
+            await this.waitToCompleteIceGathering();
+            const message = {
+                sdp: answer.sdp,
+                type: answer.type,
+                ice: this.iceCandidates
             };
-            let message = {
-                "topic" : 'answer',
-                "data" : data
-            };
-            return answer
+            return JSON.stringify(message);
         } catch (error) {
-            console.log(error);
+            console.error("Error creating answer:", error);
+            throw error;
         }
     }
 
     async handleOffer(data) {
-        const desc = new RTCSessionDescription(data.sdp);
-        await pc.setRemoteDescription(desc);
+        try {
+            if (data) {
+                const message = JSON.parse(data);
+                const desc = new RTCSessionDescription({ type: message.type, sdp: message.sdp });
+                await this.pc.setRemoteDescription(desc);
+                this.handleICECandidates(message.ice);
+            }
+        } catch (error) {
+            console.error("Error handling offer:", error);
+        }
     }
 
     async handleAnswer(data) {
         try {
-            const desc = new RTCSessionDescription(data);
-            await this.pc.setRemoteDescription(desc);
+            if (data) {
+                const message = JSON.parse(data);
+                const desc = new RTCSessionDescription({ type: message.type, sdp: message.sdp });
+                await this.pc.setRemoteDescription(desc);
+                this.handleICECandidates(message.ice);
+            }
         } catch (error) {
-            console.log(error);
+            console.error("Error handling answer:", error);
         }
-    } 
+    }
+
+    handleICECandidates(iceCandidates) {
+        iceCandidates.forEach(candidate => {
+            if (candidate) {
+                this.pc.addIceCandidate(candidate)
+                    .then(() => {
+                        console.log("ICE candidate added successfully");
+                    })
+                    .catch(error => {
+                        console.error("Error adding ICE candidate:", error);
+                    });
+            }
+        });
+    }
+
+    handleTrackEvent(event){
+        if(this._trackCallback){
+            const stream = event.streams[0];
+            this._trackCallback(stream);
+        }
+    }
+
+    /*------------------------------------------------------------------------*/
+    /* SETTER */
+    /*------------------------------------------------------------------------*/
+
+    set connectionCallback(func){
+        this._connectionCallback = func;
+    }
+
+    set trackCallback(func){
+        this._trackCallback = func;
+    }
 }
-
-

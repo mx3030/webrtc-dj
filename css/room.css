@@ -27,6 +27,10 @@
     padding-right: 5px;
 }
 
+#roomInput.invalid {
+    background: var(--color-red);
+}
+
 #roomId {
     display: flex; 
     border: none;

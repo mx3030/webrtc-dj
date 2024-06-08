@@ -1,6 +1,6 @@
 export class MediaHandler {
     constructor() {
-        this.mics = [];
+        this.mics = {};
     }
 
     async findMics(){
@@ -8,8 +8,9 @@ export class MediaHandler {
             const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
             let devices = await navigator.mediaDevices.enumerateDevices();
             devices.forEach((device,index)=>{
-                if(device.deviceId != null && device.kind == 'audioinput'){
-                    this.mics.push(device);
+                if(device["deviceId"] != null && device["kind"] == 'audioinput'){
+                    let label = device["label"];
+                    this.mics[label] = device["deviceId"];
                 } 
             })
         } catch (error) {
@@ -21,15 +22,15 @@ export class MediaHandler {
     getDeviceList() {
         const devices = []; 
         devices.push('system audio');
-        this.mics.forEach(device => {
-            devices.push(device["label"]);
+        Object.keys(this.mics).forEach(label => {
+            devices.push(label);
         })
         return devices;
     }
 
-    async getMicAudio(mic){ 
-        let micId = mic["deviceId"];
-        let micName = mic["label"];
+    async getMicAudio(label){ 
+        let micId = this.mics[label];
+        let micName = label;
         let options = {
             audio:{deviceId:{exact: micId}},
             video: false
@@ -47,7 +48,16 @@ export class MediaHandler {
     async getSystemAudio(){
         let options = {
             video: true,
-            audio: true
+            audio:{ 
+                autoGainControl: false,
+                channelCount: 2,
+                echoCancellation: false,
+                latency: 0,
+                noiseSuppression: false,
+                sampleRate: 48000,
+                sampleSize: 16,
+                volume: 1.0
+            }
         };
         try {
             const stream = await navigator.mediaDevices.getDisplayMedia(options);
@@ -59,5 +69,3 @@ export class MediaHandler {
         }      
     }
 }
-
-
