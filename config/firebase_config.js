@@ -1,9 +1,8 @@
 export const firebaseConfig = {
-    apiKey: "AIzaSyCVzcGQPRCca1BQTea5Fc2PZ0yxruVMvU8",
-    authDomain: "audiostreamer-6b4e0.firebaseapp.com",
-    databaseURL: "https://audiostreamer-6b4e0-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "audiostreamer-6b4e0",
-    storageBucket: "audiostreamer-6b4e0.appspot.com",
-    messagingSenderId: "394037796674",
-    appId: "1:394037796674:web:d7a0a0487da04d274932db"
+    apiKey: "AIzaSyCmP157u6f0uHAA2Hk-IqUsZN4gPBPdi4g",
+    authDomain: "webrtc-dj-1dd44.firebaseapp.com",
+    projectId: "webrtc-dj-1dd44",
+    storageBucket: "webrtc-dj-1dd44.appspot.com",
+    messagingSenderId: "118950096357",
+    appId: "1:118950096357:web:77f0afca41a5632889530c"
 };
